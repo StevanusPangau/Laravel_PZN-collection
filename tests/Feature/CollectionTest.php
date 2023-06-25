@@ -156,4 +156,38 @@ class CollectionTest extends TestCase
             "country" => "Indonesia"
         ], $collection3->all());
     }
+
+    /**
+     * #FLATTENING
+     * collapse() = Mengubah tiap array di item collection menjadi flat collection
+     * flatMap(function) = Iterasi tiap data, dikirim ke function yang menghasilkan collection, dan diubah menjadi flat collection
+     */
+    function testCollapse()
+    {
+        $collection = collect([
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+        ]);
+        $result = $collection->collapse();
+        assertEqualsCanonicalizing([1, 2, 3, 4, 5, 6, 7, 8, 9], $result->all());
+    }
+
+    function testFlatMap()
+    {
+        $collection = collect([
+            [
+                "name" => "Evan",
+                "hobbies" => ["Coding", "Stream"]
+            ],
+            [
+                "name" => "Stevanus",
+                "hobbies" => ["Music", "Gaming"]
+            ]
+        ]);
+        $hobbies = $collection->flatMap(function ($item) {
+            return $item["hobbies"];
+        });
+        assertEquals(["Coding", "Stream", "Music", "Gaming"], $hobbies->all());
+    }
 }
