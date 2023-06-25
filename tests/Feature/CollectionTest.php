@@ -25,4 +25,15 @@ class CollectionTest extends TestCase
             assertEquals($key + 1, $value);
         }
     }
+
+    // Manipulasi-Collection
+    function testCrud()
+    {
+        $collectioon = collect([]);
+        $collectioon->push(1, 2, 3);
+        assertEqualsCanonicalizing([1, 2, 3], $collectioon->all());
+
+        $result = $collectioon->pop();
+        assertEqualsCanonicalizing([1, 2], $collectioon->all());
+    }
 }
