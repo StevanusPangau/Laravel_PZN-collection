@@ -28,6 +28,13 @@ class CollectionTest extends TestCase
     }
 
     // Manipulasi-Collection
+    /**
+     * push(data) = Menambah data ke paling belakang
+     * pop() = Menghapus dan mengambil data paling terakhir
+     * prepend(data) = Menambah data ke paling depan
+     * pull(key) = Menghapus dan mengambil data sesuai dengan key
+     * put(key, data) = Mengubah data dengan key
+     */
     function testCrud()
     {
         $collectioon = collect([]);
@@ -38,7 +45,13 @@ class CollectionTest extends TestCase
         assertEqualsCanonicalizing([1, 2], $collectioon->all());
     }
 
-    // Mapping (untuk konversi dari satu data ke data yang lain)
+    /**
+     * # MAPPING
+     * map(function) = Iterasi seluruh data, dan mengirim seluruh data ke function
+     * mapInto(class) = Iterasi seluruh data, dan membuat object baru untuk class dengan mengirim parameter tiap data
+     * mapSpread(function) = Iterasi seluruh data, dan mengirim tiap data sebagai parameter di function
+     * mapToGroups(function) = Iterasi seluruh data, dan mengirim tiap data ke function, function harus mengembalikan single key-value array untuk di group sebagai collection baru
+     */
     function testMap()
     {
         $collection = collect([1, 2, 3]);
@@ -102,5 +115,45 @@ class CollectionTest extends TestCase
             "IT" => collect(["Evan", "Pangau"]),
             "HR" => collect(["Stevanus"])
         ], $result->all());
+    }
+
+    /**
+     * # ZIPPING
+     * zip(collection/array) = Menggabungkan tiap item di collection sehingga menjadi collection baru
+     * concat(collection/array) = Menambahkan collection pada bagian akhir sehingga menjadi collection baru
+     * combine(collection/array) = Menggabungkan collection sehingga collection pertama menjadi key dan collection kedua menjadi value
+     */
+    function testZip()
+    {
+        $collection1 = collect([1, 2, 3]);
+        $collection2 = collect([4, 5, 6]);
+        $collection3 = $collection1->zip($collection2);
+
+        assertEquals([
+            collect([1, 4]),
+            collect([2, 5]),
+            collect([3, 6]),
+        ], $collection3->all());
+    }
+
+    function testConcat()
+    {
+        $collection1 = collect([1, 2, 3]);
+        $collection2 = collect([4, 5, 6]);
+        $collection3 = $collection1->concat($collection2);
+
+        assertEquals([1, 2, 3, 4, 5, 6], $collection3->all());
+    }
+
+    function testCombine()
+    {
+        $collection1 = collect(["name", "country"]);
+        $collection2 = collect(["Evan", "Indonesia"]);
+        $collection3 = $collection1->combine($collection2);
+
+        assertEquals([
+            "name" => "Evan",
+            "country" => "Indonesia"
+        ], $collection3->all());
     }
 }
